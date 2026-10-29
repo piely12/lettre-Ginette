@@ -196,6 +196,28 @@ button:disabled{opacity:.5;cursor:wait}
   .final-heart,.final-heart::before,.final-heart::after{width:22px;height:22px}.final-heart::before{top:-11px}.final-heart::after{left:11px}
 }
 
+
+.btn-back{
+  display:inline-block;
+  margin:1.25rem auto 0;
+  background:transparent;
+  border:1px solid rgba(224,49,79,.55);
+  color:#fbe9ec;
+  font-size:.95rem;
+  padding:.55rem 1.2rem;
+  width:auto;
+  min-width:auto;
+  min-height:42px;
+}
+.btn-back:hover,.btn-back:active{background:rgba(122,15,38,.45);transform:none}
+.final-card .btn-back{
+  color:#7a0f26;
+  border-color:rgba(122,15,38,.4);
+  margin-top:1.4rem;
+}
+.final-card .btn-back:hover,.final-card .btn-back:active{background:rgba(122,15,38,.1)}
+.center .btn-back{color:#fbe9ec}
+
 </style>
 </head>
 <body>
@@ -206,7 +228,7 @@ button:disabled{opacity:.5;cursor:wait}
       <p class="hi">Lettre à ma Ginette</p>
       <p>Bon… me revoilà encore avec mes petits mots d’amour. Tu vas peut-être te dire que je parle beaucoup, mais que veux-tu… mon cœur a encore des choses à te dire.</p>
       <p>En vérité, je suis sincèrement amoureux de toi. J’ai du mal à me détacher de toi, parce qu’au fond de moi, je crois encore que notre histoire mérite qu’on lui donne une chance. Je ne dis pas que tout sera parfait, mais j’aimerais qu’on puisse essayer, doucement, à nôtre rythme.</p>
-      <p>Si je fais de petites choses pour toi, ce n’est pas pour te forcer la main ni pour te mettre la pression. C’est simplement ma façon de te montrer que tu comptes toujours énormément pour moi. 🫶🏽 Tes câlins me font toujours quelque chose, ton sourire me fait fondre et, franchement, tu es tellement magnifique à mes yeux que je pourrais te regarder pendant des heures.</p>
+      <p>Si je fais de petites choses pour toi, ce n’est pas pour te forcer la main ni pour te mettre la pression. C’est simplement ma façon de te montrer que tu comptes toujours énormément pour moi. Tes câlins me font toujours quelque chose, ton sourire me fait fondre et, franchement, tu es tellement magnifique à mes yeux que je pourrais te regarder pendant des heures.</p>
       <p>J’aimerais te faire vivre un petit conte de fées, pas forcément avec des châteaux et des carrosses, mais avec de la tendresse, des rires, des câlins, de belles attentions et surtout beaucoup de paix. Je veux être quelqu’un auprès de qui tu te sens bien, sans troubler ta quiétude.</p>
       <p>Dans tous les cas, Ginette, je t’aime et j’aimerais vraiment t’avoir dans ma vie. Ton bonheur compte pour moi, et je veux que tu prennes tout le temps dont tu as besoin. Je préfère que tu me parles sincèrement, même si ce n’est pas toujours ce que j’espère entendre, plutôt que tu te sentes obligée de me dire ce que je veux entendre.</p>
       <p>J’aimerais qu’on puisse parler de tout et de rien, rire pour des bêtises, se raconter nos journées et retrouver cette complicité qui me fait tant de bien. Je sais que ça a été compliqué entre nous à certains moments, mais aucune relation n'est parfaite. Ce qui compte, c'est aussi la manière dont on apprend à se comprendre et à avancer.</p>
@@ -226,6 +248,7 @@ button:disabled{opacity:.5;cursor:wait}
       <button data-a="non">Non, je préfère qu'on en reste là</button>
     </div>
     <p id="status" role="status" aria-live="polite"></p>
+    <button type="button" class="btn-back" id="backToLetter">Retour</button>
   </section>
 
   <section id="p3">
@@ -234,6 +257,7 @@ button:disabled{opacity:.5;cursor:wait}
       <h2 class="final-title" id="finalTitle"></h2>
       <p class="msg" id="reply"></p>
       <p class="final-sign" id="finalSign"></p>
+      <button type="button" class="btn-back" id="backToQuestion">Retour</button>
     </div>
   </section>
 </main>
@@ -301,6 +325,19 @@ $("#go").addEventListener("click",e=>{
   $("#p1").style.animation=still?"none":"out .8s ease both";
   setTimeout(()=>{$("#p1").style.animation="";show("#p2");window.scrollTo(0,0)},still?0:850);
 });
+
+$("#backToLetter").addEventListener("click",()=>{
+  show("#p1");
+  $("#go").disabled=false;
+  window.scrollTo(0,0);
+});
+$("#backToQuestion").addEventListener("click",()=>{
+  show("#p2");
+  document.querySelectorAll("[data-a]").forEach(b=>b.disabled=false);
+  $("#status").textContent="";
+  window.scrollTo(0,0);
+});
+
 
 let tx=0,ty=0;
 const nonBtn=document.querySelector("[data-a=non]");
