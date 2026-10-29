@@ -149,6 +149,53 @@ button:disabled{opacity:.5;cursor:wait}
   *{animation:none!important;transition:none!important}
   .petal{display:none}
 }
+
+/* Page finale Oui */
+.final-card{
+  max-width:28rem;margin:0 auto;
+  background:linear-gradient(165deg,#fff5f7 0%,#f6e9df 55%,#fde8ee 100%);
+  color:#3a0d17;
+  padding:2rem 1.4rem 1.8rem;
+  border-radius:18px;
+  border:1px solid rgba(255,180,190,.4);
+  box-shadow:0 0 60px rgba(224,49,79,.35),0 12px 40px rgba(0,0,0,.25);
+  text-align:center;
+  animation:in 1.2s ease both;
+}
+.final-card.oui{box-shadow:0 0 80px rgba(224,49,79,.5),0 12px 40px rgba(0,0,0,.25)}
+.final-heart{
+  width:28px;height:28px;margin:0 auto .85rem;
+  background:#e0314f;
+  transform:rotate(-45deg);
+  animation:pulse 1.8s ease-in-out infinite;
+  position:relative;
+}
+.final-heart::before,.final-heart::after{
+  content:"";position:absolute;width:28px;height:28px;
+  background:#e0314f;border-radius:50%;
+}
+.final-heart::before{top:-14px;left:0}
+.final-heart::after{top:0;left:14px}
+
+.final-title{
+  font-size:clamp(1.35rem,5.5vw,1.85rem);
+  font-weight:600;margin:0 0 1rem;line-height:1.25;
+  color:#7a0f26;
+}
+.final-card .msg{
+  font-size:clamp(1.05rem,4vw,1.25rem);
+  font-style:italic;line-height:1.55;
+  margin:0 0 1.2rem;color:#3a0d17;
+}
+.final-sign{
+  font-size:1.05rem;font-style:italic;
+  color:#a3122f;margin:0;opacity:.9;
+}
+@media(max-width:480px){
+  .final-card{padding:1.5rem 1.1rem 1.4rem;border-radius:14px}
+  .final-heart,.final-heart::before,.final-heart::after{width:22px;height:22px}.final-heart::before{top:-11px}.final-heart::after{left:11px}
+}
+
 </style>
 </head>
 <body>
@@ -156,7 +203,7 @@ button:disabled{opacity:.5;cursor:wait}
 <main>
   <section id="p1" class="on">
     <article class="letter">
-      <p class="hi">💌 Lettre à ma Ginette</p>
+      <p class="hi">Lettre à ma Ginette</p>
       <p>Bon… me revoilà encore avec mes petits mots d’amour. Tu vas peut-être te dire que je parle beaucoup, mais que veux-tu… mon cœur a encore des choses à te dire.</p>
       <p>En vérité, je suis sincèrement amoureux de toi. J’ai du mal à me détacher de toi, parce qu’au fond de moi, je crois encore que notre histoire mérite qu’on lui donne une chance. Je ne dis pas que tout sera parfait, mais j’aimerais qu’on puisse essayer, doucement, à nôtre rythme.</p>
       <p>Si je fais de petites choses pour toi, ce n’est pas pour te forcer la main ni pour te mettre la pression. C’est simplement ma façon de te montrer que tu comptes toujours énormément pour moi. 🫶🏽 Tes câlins me font toujours quelque chose, ton sourire me fait fondre et, franchement, tu es tellement magnifique à mes yeux que je pourrais te regarder pendant des heures.</p>
@@ -167,21 +214,28 @@ button:disabled{opacity:.5;cursor:wait}
       <p>Et puis, je continue encore à te découvrir, ma Ginette. Je découvre tes petites habitudes, ta façon de penser, ce qui te fait sourire et tout ce qui fait de toi cette personne si spéciale à mes yeux. Je ne prétends pas tout connaître de toi, mais j’ai envie de continuer à apprendre, si tu m'en donnes la possibilité.</p>
       <p>Prends soin de toi, ma belle. Passe une douce soirée et que Dieu veille sur toi, te protège et t'accorde beaucoup de bonheur.</p>
       <p>À plus tard, ma Ginette.</p>
-      <button id="go">Continuer ❤️</button>
+      <button id="go">Continuer</button>
     </article>
   </section>
 
   <section id="p2" class="center">
-    <h1>GINETTE, VEUX-TU ENCORE DE MOI ? ❤️</h1>
+    <h1>GINETTE, VEUX-TU ENCORE DE MOI ?</h1>
     <p class="sub">Je sais que les mots ne peuvent pas tout réparer. Je voudrais simplement savoir ce que tu ressens et si tu envisages de nous donner une nouvelle chance.</p>
     <div class="btns">
-      <button data-a="oui">Oui, je veux qu'on essaie ❤️</button>
+      <button data-a="oui">Oui, je veux qu'on essaie</button>
       <button data-a="non">Non, je préfère qu'on en reste là</button>
     </div>
     <p id="status" role="status" aria-live="polite"></p>
   </section>
 
-  <section id="p3"><p class="msg" id="reply"></p></section>
+  <section id="p3">
+    <div class="final-card" id="finalCard">
+      <div class="final-heart" aria-hidden="true"></div>
+      <h2 class="final-title" id="finalTitle"></h2>
+      <p class="msg" id="reply"></p>
+      <p class="final-sign" id="finalSign"></p>
+    </div>
+  </section>
 </main>
 
 <script>
@@ -191,8 +245,16 @@ const FORMSPREE_ID = "COLLE_TON_ID_ICI";
 
 const LABELS = {oui:"OUI, je veux qu'on essaie", non:"NON, je préfère qu'on en reste là"};
 const REPLIES = {
-  oui:"Merci de m'avoir répondu, Ginette. J'aimerais que nous prenions le temps de parler, de nous écouter et de voir ensemble ce qui est possible. Je veux te montrer mes efforts par mes actes. ❤️",
-  non:"Je comprends ta décision, Ginette. Merci d'avoir pris le temps de lire ma lettre et de me répondre. Je respecte ton choix et je te souhaite sincèrement le meilleur."
+  oui: {
+    title: "Merci de me faire confiance",
+    body: "Ginette, je te promets de ne pas t'abandonner. Je resterai là, patient, sincère et déterminé. Fais-moi confiance : je vais prouver par mes actes que notre histoire mérite cette nouvelle chance. Ensemble, doucement, on peut reconstruire quelque chose de beau.",
+    sign: "Je t'aime. Toujours là pour toi."
+  },
+  non: {
+    title: "Je comprends",
+    body: "Merci d'avoir pris le temps de lire ma lettre et de me répondre. Je respecte ton choix et je te souhaite sincèrement le meilleur.",
+    sign: ""
+  }
 };
 const $ = s => document.querySelector(s);
 const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -218,7 +280,7 @@ function blooms(list){
 function burst(n){
   if(still)return;
   for(let i=0;i<n;i++){
-    const a=i/n*6.283,b=document.createElement("span");b.className="burst";b.textContent=i%3?"🌹":"🌸";b.setAttribute("aria-hidden","true");
+    const a=i/n*6.283,b=document.createElement("span");b.className="burst";b.textContent="•";b.setAttribute("aria-hidden","true");
     b.style.setProperty("--x",Math.cos(a)*42+"vmin");b.style.setProperty("--y",Math.sin(a)*42+"vmin");
     document.body.appendChild(b);setTimeout(()=>b.remove(),1500);
   }
@@ -226,11 +288,12 @@ function burst(n){
 function show(id){
   document.querySelectorAll("section").forEach(s=>s.classList.remove("on"));
   $(id).classList.add("on");
-  $("#bg2").classList.toggle("on",id==="#p2");
+  if(id==="#p2"||id==="#p3") $("#bg2").classList.add("on");
+  else $("#bg2").classList.remove("on");
 }
 
 petals(fall);
-blooms([[4,12,"🌹"],[88,8,"🥀"],[6,70,"🌹"],[86,66,"🥀"],[44,3,"🌹"],[48,88,"🥀"]]);
+blooms([]);
 
 $("#go").addEventListener("click",e=>{
   e.target.disabled=true;burst(14);
@@ -256,11 +319,30 @@ function dodge(){
 nonBtn.addEventListener("pointerenter",e=>{if(e.pointerType==="mouse")dodge()});
 nonBtn.addEventListener("pointerdown",e=>{e.preventDefault();dodge()});
 nonBtn.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();dodge()});
+function showReply(a){
+  const r=REPLIES[a];
+  $("#finalTitle").textContent=r.title;
+  $("#reply").textContent=r.body;
+  $("#finalSign").textContent=r.sign||"";
+  $("#finalCard").classList.toggle("oui",a==="oui");
+  show("#p3");
+  if(a==="oui"){
+    burst(24);
+    petals(40);
+    $("#bg2").classList.add("on");
+  }
+}
+
 document.querySelectorAll("[data-a]").forEach(btn=>btn.addEventListener("click",async ev=>{
   if(btn.dataset.a==="non")return; // jamais de clic sur Non
   const a=btn.dataset.a,st=$("#status"),all=document.querySelectorAll("[data-a]");
-  if(FORMSPREE_ID==="COLLE_TON_ID_ICI"){st.textContent="Le site n'est pas encore configuré : ta réponse ne peut pas être enregistrée.";return}
-  all.forEach(b=>b.disabled=true);st.textContent="Envoi de ta réponse…";
+  all.forEach(b=>b.disabled=true);
+  // Affiche toujours la belle page (même sans Formspree)
+  if(FORMSPREE_ID==="COLLE_TON_ID_ICI"){
+    showReply(a);
+    return;
+  }
+  st.textContent="Envoi de ta réponse…";
   try{
     const r=await fetch("https://formspree.io/f/"+FORMSPREE_ID,{
       method:"POST",
@@ -273,11 +355,10 @@ document.querySelectorAll("[data-a]").forEach(btn=>btn.addEventListener("click",
       })
     });
     if(!r.ok)throw 0;
-    $("#reply").textContent=REPLIES[a];show("#p3");
-    if(a==="oui"){burst(20);petals(20)}
+    showReply(a);
   }catch{
-    all.forEach(b=>b.disabled=false);
-    st.textContent="Ta réponse n'a pas pu être enregistrée. Vérifie ta connexion et clique à nouveau pour réessayer.";
+    // Même en cas d'erreur réseau, on montre la page
+    showReply(a);
   }
 }));
 </script>
